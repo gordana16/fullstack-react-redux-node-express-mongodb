@@ -1,9 +1,13 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
-import Header from "./shared/Header";
+import Header from "./components/shared/Header";
 import "./styles/App.css";
 import RentalList from "./components/rental/RentalList";
 import RentalDetail from "./components/rental/RentalDetail";
+import Login from "./components/login/Login";
+import Register from "./components/register/Register";
+import ProtectedRoute from "./components/shared/auth/ProtectedRoute";
+import LoggedInRoute from "./components/shared/auth/LoggedInRoute";
 
 class App extends Component {
   render() {
@@ -13,7 +17,9 @@ class App extends Component {
           <Header />
           <Route exact path="/" component={() => <Redirect to="/rentals" />} />
           <Route exact path="/rentals" component={RentalList} />
-          <Route path="/rentals/:id" component={RentalDetail} />
+          <ProtectedRoute exact path="/rentals/:id" component={RentalDetail} />
+          <Route exact path="/login" component={Login} />
+          <LoggedInRoute exact path="/register" component={Register} />
         </div>
       </BrowserRouter>
     );

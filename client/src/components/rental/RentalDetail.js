@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { fetchRentals, fetchRental } from "../../actions";
 import RentalDetailInfo from "./RentalDetailInfo";
-import GoogleMap from "../../map/GoogleMap";
+import GoogleMap from "../map/GoogleMap";
 
 class RentalDetail extends Component {
   constructor(props) {
@@ -61,6 +61,7 @@ class RentalDetail extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log("state", state);
   return { rental: state.rentals[ownProps.match.params.id] };
 };
 export default connect(
