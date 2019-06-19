@@ -90,24 +90,36 @@ exports.register = (req, res) => {
 exports.authMiddleware = (req, res, next) => {
   const token = req.headers.authorization;
   if (token) {
-    const user = parseToken(token);
-    User.findById(user.userId, (err, user) => {
+    jwt.verify(token.split(" ")[1], config.SECRET, function(err, user) {
       if (err) {
-        return notAuthorized(res);
-      }
-      if (user) {
-        res.locals.user = user;
-        next();
-      } else {
-        return res.status(422).send({
+        return res.status(401).send({
           errors: [
             {
-              title: "Not authorized",
-              detail: "You need to login to get access!"
+              title: "Not authenticated",
+              detail: "Your session has been expired!"
             }
           ]
         });
       }
+
+      User.findById(user.userId, (err, user) => {
+        if (err) {
+          return notAuthorized(res);
+        }
+        if (user) {
+          res.locals.user = user;
+          next();
+        } else {
+          return res.status(422).send({
+            errors: [
+              {
+                title: "Not authorized",
+                detail: "You need to login to get access!"
+              }
+            ]
+          });
+        }
+      });
     });
   } else {
     return res.status(422).send({
@@ -120,10 +132,6 @@ exports.authMiddleware = (req, res, next) => {
     });
   }
 };
-
-function parseToken(token) {
-  return jwt.verify(token.split(" ")[1], config.SECRET);
-}
 
 function notAuthorized(res) {
   return res.status(401).send({ errors: normalizeErrors(err.errors) });

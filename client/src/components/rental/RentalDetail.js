@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { fetchRentals, fetchRental } from "../../actions";
+import { fetchRental } from "../../actions";
 import RentalDetailInfo from "./RentalDetailInfo";
 import GoogleMap from "../map/GoogleMap";
+import Booking from "../booking/Booking";
 
 class RentalDetail extends Component {
   constructor(props) {
@@ -27,7 +28,8 @@ class RentalDetail extends Component {
 
   render() {
     const { rental } = this.props;
-    if (!rental) {
+
+    if (!rental || !rental.bookings) {
       return <div>Loading...</div>;
     }
     return (
@@ -52,7 +54,10 @@ class RentalDetail extends Component {
             <div className="col-md-8">
               <RentalDetailInfo rental={rental} />
             </div>
-            <div className="col-md-4"> BOOKING</div>
+            <div className="col-md-4">
+              <Booking rental={rental} />
+              Booking
+            </div>
           </div>
         </div>
       </div>
@@ -61,10 +66,9 @@ class RentalDetail extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log("state", state);
   return { rental: state.rentals[ownProps.match.params.id] };
 };
 export default connect(
   mapStateToProps,
-  { fetchRentals, fetchRental }
+  { fetchRental }
 )(RentalDetail);

@@ -2,8 +2,9 @@ import React from "react";
 
 const ResErrors = ({ errors }) => {
   return (
+    errors &&
     errors.length > 0 && (
-      <div className="alert alert-danger">
+      <div className="alert alert-danger bwm-res-errors">
         {errors.map((err, index) => (
           <p key={index}>{err.detail}</p>
         ))}
@@ -11,5 +12,4 @@ const ResErrors = ({ errors }) => {
     )
   );
 };
-
 export default ResErrors;

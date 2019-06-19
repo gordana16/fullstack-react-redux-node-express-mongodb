@@ -5,9 +5,8 @@ const User = require("../models/user");
 const { normalizeErrors } = require("../helpers/mongoose");
 
 exports.createBooking = function(req, res) {
-  const { startAt, endAt, totalPrice, guests, days, rental } = req.body;
+  const { startAt, endAt, totalPrice, guests, days, rentalId } = req.body;
   const user = res.locals.user;
-
   const booking = new Booking({
     startAt,
     endAt,
@@ -15,7 +14,7 @@ exports.createBooking = function(req, res) {
     days,
     guests
   });
-  Rental.findById(rental._id)
+  Rental.findById(rentalId)
     .populate("bookings")
     .populate("user")
     .exec((err, foundRental) => {
@@ -68,11 +67,12 @@ exports.createBooking = function(req, res) {
 
 function isValidBooking(proposedBooking, rental) {
   if (rental.bookings && rental.bookings.length > 0) {
-    return rental.bookings.every(
-      booking =>
+    return rental.bookings.every(booking => {
+      return (
         moment(proposedBooking.startAt) > moment(booking.endAt) ||
         moment(proposedBooking.endAt) < moment(booking.startAt)
-    );
+      );
+    });
   }
   return true;
 }
