@@ -10,7 +10,7 @@ const bookingRoutes = require("./routes/bookings");
 
 mongoose.connect(config.DB_URI, { useNewUrlParser: true }).then(() => {
   const fakeDb = new FakeDb();
-  // fakeDb.pushDataToDb();
+  //fakeDb.pushDataToDb();
 });
 mongoose.set("useCreateIndex", true); //prevent warning
 
