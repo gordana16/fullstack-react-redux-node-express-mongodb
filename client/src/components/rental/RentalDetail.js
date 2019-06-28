@@ -8,7 +8,7 @@ import Booking from "../booking/Booking";
 class RentalDetail extends Component {
   constructor(props) {
     super(props);
-    // this.state = { mapHeight: 0 };
+    //this.state = { mapHeight: 0 };
     this.imgRef = React.createRef();
   }
 
@@ -17,14 +17,9 @@ class RentalDetail extends Component {
     this.props.fetchRental(id);
   }
 
-  componentDidUpdate() {
-    this.imgRef.current.addEventListener("load", this.setMapHeight);
-  }
-
-  setMapHeight = () => {
-    //this.setState({ mapHeight: this.imgRef.current.clientHeight });
+  setMapHeight() {
     this.forceUpdate();
-  };
+  }
 
   render() {
     const { rental } = this.props;
@@ -37,7 +32,12 @@ class RentalDetail extends Component {
         <div className="upper-section">
           <div className="row">
             <div className="col-md-6">
-              <img ref={this.imgRef} src={rental.image} alt="" />
+              <img
+                ref={this.imgRef}
+                onLoad={() => this.setMapHeight()}
+                src={rental.image}
+                alt=""
+              />
             </div>
             <div className="col-md-6 ">
               <GoogleMap
@@ -65,9 +65,10 @@ class RentalDetail extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return { rental: state.rentals[ownProps.match.params.id] };
+const mapStateToProps = state => {
+  return { rental: state.rental.data };
 };
+
 export default connect(
   mapStateToProps,
   { fetchRental }

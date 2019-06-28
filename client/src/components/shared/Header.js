@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { checkAuthStatus, logout } from "../../actions";
+import RentalSearchInput from "../rental/RentalSearchInput";
 
 class Header extends Component {
   componentDidMount() {
@@ -13,8 +14,7 @@ class Header extends Component {
     this.props.history.push("rentals");
   };
 
-  renderAuthButtons() {
-    const { isAuth } = this.props.auth;
+  renderAuthButtons(isAuth) {
     if (isAuth) {
       return (
         <a
@@ -37,15 +37,45 @@ class Header extends Component {
       );
     }
   }
-
+  renderOwnerSection(isAuth) {
+    if (isAuth) {
+      return (
+        <div className="nav-item dropdown my-sm-2">
+          <a
+            className="nav-link nav-item dropdown-toggle clickable"
+            id="navbarDropdownMenuLink"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Owner Section
+          </a>
+          <div
+            className="dropdown-menu"
+            aria-labelledby="navbarDropdownMenuLink"
+          >
+            <Link className="dropdown-item" to="/rentals/new">
+              Create Rental
+            </Link>
+            <Link className="dropdown-item" to="#">
+              Manage Rentals
+            </Link>
+            <Link className="dropdown-item" to="#">
+              Manage Bookings
+            </Link>
+          </div>
+        </div>
+      );
+    }
+  }
   render() {
+    const { username, isAuth } = this.props.auth;
     return (
       <nav className="navbar navbar-expand-sm navbar-dark bg-dark ">
         <div className="container ">
           <Link to="/rentals" className="navbar-brand flex-fill" href="#">
             BookWithMe
           </Link>
-
           <button
             className="navbar-toggler"
             type="button"
@@ -63,21 +93,12 @@ class Header extends Component {
             id="navbarNavAltMarkup"
           >
             <div className="navbar-nav flex-grow-1 ml-sm-4">
-              <form className="form-inline my-2 my-lg-0 mr-auto">
-                <input
-                  className="form-control mr-sm-2"
-                  type="search"
-                  placeholder="Try 'New York'"
-                  aria-label="Search"
-                />
-                <button
-                  className="btn btn-outline-success my-2 my-sm-1 btn-bwm-search"
-                  type="submit"
-                >
-                  Search
-                </button>
-              </form>
-              {this.renderAuthButtons()}
+              <RentalSearchInput />
+              {isAuth && (
+                <a className="nav-item nav-link my-sm-2">{username}</a>
+              )}
+              {this.renderOwnerSection(isAuth)}
+              {this.renderAuthButtons(isAuth)}
             </div>
           </div>
         </div>

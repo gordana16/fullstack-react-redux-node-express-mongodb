@@ -1,5 +1,7 @@
+import titleize from "titleize";
 import moment from "moment";
 
+export const toUpperCase = value => (value ? titleize(value) : "");
 export const getRangeOfDates = (firstDay, lastDay, dateFormat = "Y/MM/DD") => {
   const daysArr = [];
   let offDay = moment(firstDay, dateFormat);

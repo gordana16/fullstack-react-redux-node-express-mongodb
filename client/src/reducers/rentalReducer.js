@@ -1,17 +1,50 @@
-import _ from "lodash";
+import {
+  FETCH_RENTALS_INIT,
+  FETCH_RENTALS_SUCCESS,
+  FETCH_RENTALS_FAIL,
+  FETCH_RENTAL_BY_ID_INIT,
+  FETCH_RENTAL_BY_ID_SUCCESS,
+  FETCH_RENTAL_BY_ID_FAIL
+} from "../actions/types";
 
-import { FETCH_RENTALS, FETCH_RENTAL } from "../actions/types";
+const INITIAL_STATE = {
+  rentals: {
+    data: [],
+    errors: []
+  },
+  rental: {
+    data: {},
+    errors: []
+  }
+};
 
-export default (state = {}, action) => {
+export const rentalsReducer = (state = INITIAL_STATE.rentals, action) => {
   switch (action.type) {
-    case FETCH_RENTALS: {
-      return { ...state, ..._.mapKeys(action.payload, "_id") };
+    case FETCH_RENTALS_INIT: {
+      return { ...state, data: [], errors: [] };
     }
-
-    case FETCH_RENTAL: {
-      return { ...state, [action.payload._id]: action.payload };
+    case FETCH_RENTALS_SUCCESS: {
+      return { ...state, data: action.payload };
     }
+    case FETCH_RENTALS_FAIL: {
+      return { ...state, errors: action.payload };
+    }
+    default:
+      return state;
+  }
+};
 
+export const singleRentalReducer = (state = INITIAL_STATE.rental, action) => {
+  switch (action.type) {
+    case FETCH_RENTAL_BY_ID_INIT: {
+      return { ...state, data: {}, errors: [] };
+    }
+    case FETCH_RENTAL_BY_ID_SUCCESS: {
+      return { ...state, data: action.payload };
+    }
+    case FETCH_RENTAL_BY_ID_FAIL: {
+      return { ...state, errors: action.payload };
+    }
     default:
       return state;
   }

@@ -23,7 +23,7 @@ class RentalList extends Component {
   }
 }
 const mapStateToProps = state => {
-  return { rentals: Object.values(state.rentals) };
+  return { rentals: state.rentals.data };
 };
 export default connect(
   mapStateToProps,
