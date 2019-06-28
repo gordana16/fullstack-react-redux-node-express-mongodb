@@ -27,16 +27,6 @@ router.get("/:id", (req, res) => {
 
 router.post("", UserCtrl.authMiddleware, (req, res) => {
   const user = res.locals.user;
-  const {
-    city,
-    street,
-    category,
-    image,
-    bedroom,
-    shared,
-    description,
-    dailyRate
-  } = req.body;
 
   const rental = new Rental(req.body);
   rental.user = user;
@@ -64,7 +54,7 @@ router.get("", (req, res) => {
           errors: [
             {
               title: "No rentals found",
-              detail: `There are not rentals for city: ${city}`
+              detail: `There are not rentals for ${city}`
             }
           ]
         });
