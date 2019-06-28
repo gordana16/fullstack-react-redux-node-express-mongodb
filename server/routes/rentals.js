@@ -10,6 +10,18 @@ router.get("/secret", UserCtrl.authMiddleware, (req, res) => {
   res.json({ secret: true });
 });
 
+router.get("/manage", UserCtrl.authMiddleware, (req, res) => {
+  const user = res.locals.user;
+  Rental.where({ user })
+    .populate("bookings")
+    .exec((err, foundRentals) => {
+      if (err) {
+        return res.status(422).send({ errors: normalizeErrors(err.errors) });
+      }
+      return res.json(foundRentals);
+    });
+});
+
 router.get("/:id", (req, res) => {
   const rentalId = req.params.id;
   Rental.findById(rentalId)
@@ -17,11 +29,58 @@ router.get("/:id", (req, res) => {
     .populate("bookings", "startAt endAt -_id")
     .exec((err, foundRental) => {
       if (err) {
-        res.status(422).send({
+        return res.status(422).send({
           errors: [{ title: "Rental Error", detail: "Could not find rental" }]
         });
       }
       res.json(foundRental);
+    });
+});
+
+router.delete("/:id", UserCtrl.authMiddleware, (req, res) => {
+  const user = res.locals.user;
+
+  const rentalId = req.params.id;
+  Rental.findById(rentalId)
+    .populate("user", "_id")
+    .populate({
+      path: "bookings",
+      select: "endAt",
+      match: { endAt: { $gt: new Date() } }
+    })
+    .exec((err, foundRental) => {
+      if (err) {
+        return res.status(422).send({ errors: normalizeErrors(err.errors) });
+      }
+      if (!foundRental) {
+        return res.status(422).send({
+          errors: [{ title: "Rental Error", detail: "Could not find rental" }]
+        });
+      }
+      if (user._id !== foundRental.user._id) {
+        return res.status(422).send({
+          errors: [
+            { title: "Invalid User", detail: "You are not rental owner" }
+          ]
+        });
+      }
+
+      if (foundRental.bookings.length > 0) {
+        return res.status(422).send({
+          errors: [
+            {
+              title: "Active bookings!",
+              detail: "Cannot delete rental with active booking"
+            }
+          ]
+        });
+      }
+      foundRental.remove(err => {
+        if (err) {
+          return res.status(422).send({ errors: normalizeErrors(err.errors) });
+        }
+      });
+      res.json({ status: "deleted" });
     });
 });
 
