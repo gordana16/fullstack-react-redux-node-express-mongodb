@@ -1,25 +1,20 @@
 import React from "react";
 
-const FormInput = ({
+const FormTextArea = ({
   input,
   label,
+  rows,
   type,
-  symbol,
   className,
   meta: { touched, error }
 }) => (
   <div className="form-group">
     <label>{label}</label>
     <div className="input-group">
-      {symbol && (
-        <div className="input-group-prepend">
-          <span className="input-group-text">{symbol}</span>
-        </div>
-      )}
-      <input {...input} type={type} className={className} autoComplete="off" />
+      <textarea {...input} type={type} rows={rows} className={className} />
     </div>
     {touched && (error && <div className="alert alert-danger">{error}</div>)}
   </div>
 );
 
-export default FormInput;
+export default FormTextArea;

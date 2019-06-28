@@ -65,7 +65,7 @@ class GoogleMap extends Component {
     if (!window.google) {
       var script = document.createElement("script");
       script.type = "text/javascript";
-      script.src = `https://maps.google.com/maps/api/js?&key=AIzaSyCgURx8CJ4iv_GN20xPz3Iall7r4pqwpmU`;
+      script.src = `https://maps.google.com/maps/api/js?key=AIzaSyCgURx8CJ4iv_GN20xPz3Iall7r4pqwpmU`;
       var elem = document.getElementsByTagName("script")[0];
       elem.parentNode.insertBefore(script, elem);
       script.addEventListener("load", e => {

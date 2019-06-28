@@ -2,8 +2,12 @@ import axios from "axios";
 import authService from "../services/authService";
 import axiosService from "../services/axiosService";
 import {
-  FETCH_RENTALS,
-  FETCH_RENTAL,
+  FETCH_RENTALS_INIT,
+  FETCH_RENTALS_SUCCESS,
+  FETCH_RENTALS_FAIL,
+  FETCH_RENTAL_BY_ID_INIT,
+  FETCH_RENTAL_BY_ID_SUCCESS,
+  FETCH_RENTAL_BY_ID_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT
@@ -12,29 +16,48 @@ import {
 const axiosInstance = axiosService.getInstance();
 
 //rental actions
-export const fetchRentals = () => dispatch =>
-  axiosInstance
-    .get("/rentals")
-    .then(response =>
-      dispatch({ type: FETCH_RENTALS, payload: response.data })
-    );
+export const fetchRentals = city => {
+  const url = city ? `/rentals?city=${city}` : "/rentals";
+  return dispatch => {
+    dispatch({ type: FETCH_RENTALS_INIT });
+    return axiosInstance
+      .get(url)
+      .then(response =>
+        dispatch({ type: FETCH_RENTALS_SUCCESS, payload: response.data })
+      )
+      .catch(({ response }) =>
+        dispatch({ type: FETCH_RENTALS_FAIL, payload: response.data.errors })
+      );
+  };
+};
 
-export const fetchRental = id => dispatch =>
-  axiosInstance
+export const fetchRental = id => dispatch => {
+  dispatch({ type: FETCH_RENTAL_BY_ID_INIT });
+  return axiosInstance
     .get(`/rentals/${id}`)
-    .then(response => dispatch({ type: FETCH_RENTAL, payload: response.data }));
-
+    .then(response =>
+      dispatch({ type: FETCH_RENTAL_BY_ID_SUCCESS, payload: response.data })
+    )
+    .catch(({ response }) =>
+      dispatch({ type: FETCH_RENTAL_BY_ID_FAIL, payload: response.data.errors })
+    );
+};
+export const createRental = rentalData => {
+  return axiosInstance
+    .post("/rentals/", { ...rentalData })
+    .then(
+      res => res.data,
+      ({ response }) => Promise.reject(response.data.errors)
+    );
+};
 //auth actions
 export const register = userData => {
   return axios
     .post("/api/v1/users/register", { ...userData })
-    .then(res => res.data, err => Promise.reject(err.response.data.errors));
-};
-
-export const loginSuccess = () => {
-  return {
-    type: LOGIN_SUCCESS
-  };
+    .then(
+      res => res.data,
+      ({ response }) => Promise.reject(response.data.errors)
+    );
 };
 
 export const loginFailure = errors => {
@@ -44,11 +67,20 @@ export const loginFailure = errors => {
   };
 };
 
+export const loginSuccess = () => {
+  const username = authService.getUsername();
+  return {
+    type: LOGIN_SUCCESS,
+    username
+  };
+};
+
 export const checkAuthStatus = () => {
   return dispatch => {
     if (authService.isAuthenticated()) {
-      dispatch(loginSuccess());
+      return dispatch(loginSuccess());
     }
+    return dispatch({ type: LOGOUT });
   };
 };
 

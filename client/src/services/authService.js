@@ -19,7 +19,13 @@ class authService {
   getToken() {
     return localStorage.getItem("auth_token");
   }
-
+  decode(token) {
+    return jwt.decode(token);
+  }
+  getUsername() {
+    const token = this.getToken();
+    return this.decode(token).username;
+  }
   invalidateUser() {
     localStorage.removeItem("auth_token");
   }
