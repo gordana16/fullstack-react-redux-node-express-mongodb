@@ -21,9 +21,8 @@ class RentalCreate extends Component {
   }
   render() {
     const { errors, redirect } = this.state;
-
     if (redirect) {
-      return <Redirect to={{ pathname: "/rentals" }} />;
+      return <Redirect to={{ pathname: "/rentals/" }} />;
     }
     return (
       <div id="newRental">

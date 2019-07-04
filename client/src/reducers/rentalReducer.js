@@ -10,7 +10,8 @@ import {
 const INITIAL_STATE = {
   rentals: {
     data: [],
-    errors: []
+    errors: [],
+    isFetching: false
   },
   rental: {
     data: {},
@@ -21,13 +22,13 @@ const INITIAL_STATE = {
 export const rentalsReducer = (state = INITIAL_STATE.rentals, action) => {
   switch (action.type) {
     case FETCH_RENTALS_INIT: {
-      return { ...state, data: [], errors: [] };
+      return { ...state, data: [], errors: [], isFetching: true };
     }
     case FETCH_RENTALS_SUCCESS: {
-      return { ...state, data: action.payload };
+      return { ...state, data: action.payload, isFetching: false };
     }
     case FETCH_RENTALS_FAIL: {
-      return { ...state, errors: action.payload };
+      return { ...state, errors: action.payload, isFetching: false };
     }
     default:
       return state;

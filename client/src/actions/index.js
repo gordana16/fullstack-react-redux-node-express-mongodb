@@ -8,6 +8,9 @@ import {
   FETCH_RENTAL_BY_ID_INIT,
   FETCH_RENTAL_BY_ID_SUCCESS,
   FETCH_RENTAL_BY_ID_FAIL,
+  FETCH_USER_BOOKINGS_INIT,
+  FETCH_USER_BOOKINGS_SUCCESS,
+  FETCH_USER_BOOKINGS_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
   LOGOUT
@@ -17,11 +20,25 @@ const axiosInstance = axiosService.getInstance();
 
 //rental actions
 export const fetchRentals = city => {
-  const url = city ? `/rentals?city=${city}` : "/rentals";
+  const url = city ? `/api/v1/rentals?city=${city}` : "/api/v1//rentals";
+  return dispatch => {
+    dispatch({ type: FETCH_RENTALS_INIT });
+    return axios
+      .get(url)
+      .then(response =>
+        dispatch({ type: FETCH_RENTALS_SUCCESS, payload: response.data })
+      )
+      .catch(({ response }) =>
+        dispatch({ type: FETCH_RENTALS_FAIL, payload: response.data.errors })
+      );
+  };
+};
+
+export const fetchUserRentals = () => {
   return dispatch => {
     dispatch({ type: FETCH_RENTALS_INIT });
     return axiosInstance
-      .get(url)
+      .get("/rentals/manage")
       .then(response =>
         dispatch({ type: FETCH_RENTALS_SUCCESS, payload: response.data })
       )
@@ -33,8 +50,8 @@ export const fetchRentals = city => {
 
 export const fetchRental = id => dispatch => {
   dispatch({ type: FETCH_RENTAL_BY_ID_INIT });
-  return axiosInstance
-    .get(`/rentals/${id}`)
+  return axios
+    .get(`/api/v1/rentals/${id}`)
     .then(response =>
       dispatch({ type: FETCH_RENTAL_BY_ID_SUCCESS, payload: response.data })
     )
@@ -50,6 +67,34 @@ export const createRental = rentalData => {
       ({ response }) => Promise.reject(response.data.errors)
     );
 };
+
+export const deleteRental = id => {
+  return axiosInstance
+    .delete(`/rentals/${id}`)
+    .then(
+      res => res.data,
+      ({ response }) => Promise.reject(response.data.errors)
+    );
+};
+
+//booking actions
+export const fetchUserBookings = () => {
+  return dispatch => {
+    dispatch({ type: FETCH_USER_BOOKINGS_INIT });
+    return axiosInstance
+      .get("/bookings/manage")
+      .then(response =>
+        dispatch({ type: FETCH_USER_BOOKINGS_SUCCESS, payload: response.data })
+      )
+      .catch(({ response }) =>
+        dispatch({
+          type: FETCH_USER_BOOKINGS_FAIL,
+          payload: response.data.errors
+        })
+      );
+  };
+};
+
 //auth actions
 export const register = userData => {
   return axios

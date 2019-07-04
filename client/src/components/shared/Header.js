@@ -11,7 +11,7 @@ class Header extends Component {
 
   handleLogout = () => {
     this.props.logout();
-    this.props.history.push("rentals");
+    this.props.history.push("/rentals/");
   };
 
   renderAuthButtons(isAuth) {
@@ -57,10 +57,10 @@ class Header extends Component {
             <Link className="dropdown-item" to="/rentals/new">
               Create Rental
             </Link>
-            <Link className="dropdown-item" to="#">
+            <Link className="dropdown-item" to="/rentals/manage">
               Manage Rentals
             </Link>
-            <Link className="dropdown-item" to="#">
+            <Link className="dropdown-item" to="/bookings/manage">
               Manage Bookings
             </Link>
           </div>
@@ -75,6 +75,7 @@ class Header extends Component {
         <div className="container ">
           <Link to="/rentals" className="navbar-brand flex-fill" href="#">
             BookWithMe
+            <img src={`${process.env.PUBLIC_URL}/img/react-logo.svg`} alt="" />
           </Link>
           <button
             className="navbar-toggler"

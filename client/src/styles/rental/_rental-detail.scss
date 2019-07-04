@@ -10,6 +10,19 @@
   .details-section {
     color: $main-text-grey-color;
     .rental {
+      &-owner {
+        img {
+          height: 50px;
+          border-radius: 50%;
+          display: block;
+          margin: 0 auto;
+        }
+        span {
+          display: block;
+          font-size: 13px;
+          font-weight: 300;
+        }
+      }
       &-type {
         font-size: 14px;
         font-weight: 300;

@@ -27,7 +27,7 @@
     "redux": "^3.7.2",
     "redux-form": "^8.1.0",
     "redux-thunk": "^2.2.0",
-    "titleize": "^2.1.0"
+    "titleize": "^1.0.1"
   },
   "scripts": {
     "build-css": "node-sass-chokidar ./src/styles -o ./src/styles",

@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import DateRangePicker from "react-bootstrap-daterangepicker";
 import { ToastContainer, toast } from "react-toastify";
@@ -83,7 +85,7 @@ class Booking extends Component {
   }
 
   render() {
-    const { rental } = this.props;
+    const { rental, isAuth } = this.props;
     const { startAt, endAt, guests, openModal } = this.state;
     const days = getRangeOfDates(startAt, endAt).length - 1;
     const totalPrice = rental.dailyRate * days;
@@ -95,41 +97,53 @@ class Booking extends Component {
           <span className="booking-per-night">per night</span>
         </h3>
         <hr />
-        <div className="form-group">
-          <label htmlFor="dates">Dates</label>
-          <DateRangePicker
-            onApply={this.handleApply}
-            isInvalidDate={this.checkInvalidDate}
-            opens="left"
-            containerStyles={{ display: "block" }}
+        {!isAuth && (
+          <Link
+            className="btn btn-bwm btn-confirm btn-block"
+            to={{ pathname: "/login" }}
           >
-            <input
-              ref={this.dateRef}
-              id="dates"
-              type="text"
-              className="form-control"
-            />
-          </DateRangePicker>
-        </div>
-        <div className="form-group">
-          <label htmlFor="guests">Guests</label>
-          <input
-            onChange={event => this.addGuests(event)}
-            value={this.state.guests}
-            type="number"
-            className="form-control"
-            id="guests"
-            aria-describedby="emailHelp"
-            placeholder=""
-          />
-        </div>
-        <button
-          disabled={!startAt || !endAt || !guests}
-          onClick={() => this.confirmReservation()}
-          className="btn btn-bwm btn-confirm btn-block"
-        >
-          Reserve place now
-        </button>
+            Login to book a place
+          </Link>
+        )}
+        {isAuth && (
+          <React.Fragment>
+            <div className="form-group">
+              <label htmlFor="dates">Dates</label>
+              <DateRangePicker
+                onApply={this.handleApply}
+                isInvalidDate={this.checkInvalidDate}
+                opens="left"
+                containerStyles={{ display: "block" }}
+              >
+                <input
+                  ref={this.dateRef}
+                  id="dates"
+                  type="text"
+                  className="form-control"
+                />
+              </DateRangePicker>
+            </div>
+            <div className="form-group">
+              <label htmlFor="guests">Guests</label>
+              <input
+                onChange={event => this.addGuests(event)}
+                value={this.state.guests}
+                type="number"
+                className="form-control"
+                id="guests"
+                aria-describedby="emailHelp"
+                placeholder=""
+              />
+            </div>
+            <button
+              disabled={!startAt || !endAt || !guests}
+              onClick={() => this.confirmReservation()}
+              className="btn btn-bwm btn-confirm btn-block"
+            >
+              Reserve place now
+            </button>
+          </React.Fragment>
+        )}
         <hr />
         <p className="booking-note-title">
           People are interested into this house
@@ -154,4 +168,10 @@ class Booking extends Component {
   }
 }
 
-export default Booking;
+const mapStateToProps = state => {
+  return {
+    rental: state.rental.data,
+    isAuth: state.auth.isAuth
+  };
+};
+export default connect(mapStateToProps)(Booking);
