@@ -4,7 +4,6 @@ import authService from "../../../services/authService";
 
 function ProtectedRoute(props) {
   const { component: Component, ...rest } = props;
-
   return (
     <Route
       {...rest}

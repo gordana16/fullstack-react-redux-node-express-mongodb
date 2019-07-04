@@ -17,3 +17,5 @@ export const getRangeOfDates = (firstDay, lastDay, dateFormat = "Y/MM/DD") => {
 export const dateToUTC = (sDate, dateFormat = "Y/MM/DD") => {
   return moment.utc(sDate, dateFormat).format();
 };
+
+export const pretifyDate = date => moment(date).format("MMM Do YY");
