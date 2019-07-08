@@ -20,7 +20,7 @@ const axiosInstance = axiosService.getInstance();
 
 //rental actions
 export const fetchRentals = city => {
-  const url = city ? `/api/v1/rentals?city=${city}` : "/api/v1//rentals";
+  const url = city ? `/api/v1/rentals?city=${city}` : "/api/v1/rentals";
   return dispatch => {
     dispatch({ type: FETCH_RENTALS_INIT });
     return axios

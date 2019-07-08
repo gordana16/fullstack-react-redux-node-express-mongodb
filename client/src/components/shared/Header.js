@@ -27,7 +27,7 @@ class Header extends Component {
     } else {
       return (
         <React.Fragment>
-          <Link to="/login" className="nav-item nav-link active my-sm-2">
+          <Link to="/login" className="nav-item nav-link my-sm-2">
             Login <span className="sr-only">(current)</span>
           </Link>
           <Link to="/register" className="nav-item nav-link my-sm-2">
