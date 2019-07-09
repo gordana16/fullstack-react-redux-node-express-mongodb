@@ -1,0 +1,20 @@
+{
+  "name": "bwm-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "heroku-postbuild": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gordana16/fullstack-react-redux-node-express-mongodb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gordana16/fullstack-react-redux-node-express-mongodb/issues"
+  },
+  "homepage": "https://github.com/gordana16/fullstack-react-redux-node-express-mongodb#readme"
+}
